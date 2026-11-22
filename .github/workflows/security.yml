@@ -1,4 +1,4 @@
-name: Security baseline
+name: Security and configuration baseline
 
 on:
   pull_request:
@@ -19,3 +19,19 @@ jobs:
       - uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  linux-config-test:
+    runs-on: ubuntu-latest
+    env:
+      KEYCLOAK_DB_PASSWORD: test-only-placeholder
+      KEYCLOAK_BOOTSTRAP_USERNAME: test-only-admin
+      KEYCLOAK_BOOTSTRAP_PASSWORD: test-only-placeholder
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: sh -n scripts/init-local-keycloak.sh
+      - run: node --check scripts/provision-local-keycloak.mjs
+      - run: node --test tests/keycloak-config.test.mjs
+      - run: docker compose -f infra/keycloak/compose.local.yml config --quiet

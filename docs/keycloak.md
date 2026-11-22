@@ -17,10 +17,10 @@ No Vasco realm, role, account, domain, secret or personal data is copied.
 
 ## Local start
 
-Prerequisites: Docker Desktop, PowerShell and a current Node.js runtime.
+Prerequisites: a Linux host with Docker Engine and the Compose plugin, OpenSSL and a current Node.js runtime.
 
-```powershell
-./scripts/init-local-keycloak.ps1
+```bash
+./scripts/init-local-keycloak.sh
 docker compose --env-file infra/keycloak/.env -f infra/keycloak/compose.local.yml config --quiet
 docker compose --env-file infra/keycloak/.env -f infra/keycloak/compose.local.yml up -d
 node scripts/provision-local-keycloak.mjs
@@ -52,7 +52,8 @@ Before reusing an instance, verify administrative separation, backup/restore, up
 
 Configuration-only checks do not start containers or create accounts:
 
-```powershell
+```bash
+sh -n scripts/init-local-keycloak.sh
 node --test tests/keycloak-config.test.mjs
 node --check scripts/provision-local-keycloak.mjs
 ```
