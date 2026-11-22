@@ -26,7 +26,7 @@ Requests with an unknown host or route return `404`; the dashboard and Docker pr
 | --- | --- | --- |
 | `careeros-edge` | Host-facing gateway traffic. | Only ingress components attach. |
 | `careeros-services` | Gateway-to-service and service-to-service HTTP. | Internal Docker network. |
-| `careeros-data` | PostgreSQL, RabbitMQ, S3 and services that use them. | Internal Docker network; credentials still enforce ownership. |
+| `careeros-data` | PostgreSQL, RabbitMQ, S3 and services that use them. | Named Docker network; development ports remain loopback-bound and credentials enforce ownership. |
 
 Service Compose files declare only the shared networks they need:
 

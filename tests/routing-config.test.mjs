@@ -25,10 +25,10 @@ test('routing uses a file provider and exposes only the readiness route', () => 
   assert.match(routing, /frameDeny: true/);
 });
 
-test('edge, service and data networks have stable names and internal boundaries', () => {
+test('edge, service and data networks have stable names and service isolation', () => {
   assert.match(routingCompose, /name: careeros-edge/);
   assert.match(routingCompose, /name: careeros-services[\s\S]*?internal: true/);
-  assert.match(dependenciesCompose, /name: careeros-data[\s\S]*?internal: true/);
+  assert.match(dependenciesCompose, /name: careeros-data\r?\n\s+driver: bridge/);
   assert.equal((dependenciesCompose.match(/networks:\r?\n\s+- data/g) ?? []).length, 3);
 });
 

@@ -82,4 +82,3 @@ networks:
   data:
     name: careeros-data
     driver: bridge
-    internal: true
