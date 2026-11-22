@@ -14,6 +14,10 @@ Deployable configuration templates, environment contracts and operational runboo
 - Outputs: Reproducible environments without embedded credentials.
 - Dependencies: container runtime, ingress and observability providers.
 
+## Initial contents
+
+The first useful layer is Docker Compose, service health checks, local networking, Traefik/reverse-proxy configuration and observability defaults. Idempotent bootstrap, migration, backup and restore scripts may be added as operational needs appear. Terraform, Ansible, Helm or Kubernetes belong here only when the deployment model justifies them.
+
 ## Contract rules
 
 - APIs and events are versioned.
