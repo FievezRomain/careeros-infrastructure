@@ -17,16 +17,17 @@ No Vasco realm, role, account, domain, secret or personal data is copied.
 
 ## Local start
 
-Prerequisites: a Linux host with Docker Engine and the Compose plugin, OpenSSL and a current Node.js runtime.
+Prerequisites: Docker Engine with the Compose plugin, Python 3.14 and a current Node.js runtime for realm provisioning.
 
 ```bash
-./scripts/init-local-keycloak.sh
+python scripts/bootstrap_local.py
+python scripts/validate_local_env.py
 docker compose --env-file infra/keycloak/.env -f infra/keycloak/compose.local.yml config --quiet
 docker compose --env-file infra/keycloak/.env -f infra/keycloak/compose.local.yml up -d
 node scripts/provision-local-keycloak.mjs
 ```
 
-The first command is idempotent and never replaces an existing `.env`. The generated file and the synthetic fixture in `.local/` must never be printed in CI, attached to an issue or committed.
+Bootstrap is idempotent and never replaces an existing `.env`. The validator checks both local environment files and every Compose configuration without printing values. The generated files and the synthetic fixture in `.local/` must never be printed in CI, attached to an issue or committed.
 
 Local endpoints:
 
@@ -54,6 +55,7 @@ Configuration-only checks do not start containers or create accounts:
 
 ```bash
 sh -n scripts/init-local-keycloak.sh
+python -m unittest tests/test_local_env.py
 node --test tests/keycloak-config.test.mjs
 node --check scripts/provision-local-keycloak.mjs
 ```

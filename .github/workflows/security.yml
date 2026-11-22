@@ -46,9 +46,23 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
       - run: sh -n scripts/init-local-keycloak.sh
       - run: sh -n infra/dependencies/init-databases.sh
       - run: node --check scripts/provision-local-keycloak.mjs
+      - run: python -m py_compile scripts/local_env.py scripts/bootstrap_local.py scripts/validate_local_env.py
+      - run: python -m unittest discover -s tests -p "test_*.py"
+      - name: Verify idempotent bootstrap commands
+        run: |
+          fixture="$(mktemp -d)"
+          mkdir -p "$fixture/infra/dependencies" "$fixture/infra/keycloak"
+          cp infra/dependencies/.env.example "$fixture/infra/dependencies/.env.example"
+          cp infra/keycloak/.env.example "$fixture/infra/keycloak/.env.example"
+          python scripts/bootstrap_local.py --root "$fixture" --files-only
+          python scripts/bootstrap_local.py --root "$fixture" --files-only
+          python scripts/validate_local_env.py --root "$fixture" --files-only
       - run: node --test tests/*.test.mjs
       - run: docker compose -f infra/keycloak/compose.local.yml config --quiet
       - run: docker compose -f infra/dependencies/compose.local.yml config --quiet
