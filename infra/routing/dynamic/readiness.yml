@@ -1,0 +1,16 @@
+http:
+  routers:
+    platform-readiness:
+      rule: Host(`health.careeros.localhost`) && Path(`/ready`)
+      entryPoints:
+        - web
+      service: ping@internal
+      middlewares:
+        - security-headers
+
+  middlewares:
+    security-headers:
+      headers:
+        contentTypeNosniff: true
+        frameDeny: true
+        referrerPolicy: no-referrer

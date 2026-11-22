@@ -1,0 +1,44 @@
+name: careeros-routing-local
+
+services:
+  gateway:
+    image: traefik:v3.7.19
+    command:
+      - --entrypoints.web.address=:8080
+      - --entrypoints.health.address=:8082
+      - --ping=true
+      - --ping.entrypoint=health
+      - --ping.terminatingstatuscode=503
+      - --providers.file.directory=/etc/traefik/dynamic
+      - --providers.file.watch=true
+      - --api.dashboard=false
+      - --log.level=INFO
+      - --accesslog=true
+      - --accesslog.fields.headers.defaultmode=drop
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - ./dynamic:/etc/traefik/dynamic:ro
+    networks:
+      - edge
+      - services
+    healthcheck:
+      test: [CMD, traefik, healthcheck, --ping]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 128m
+
+networks:
+  edge:
+    name: careeros-edge
+    driver: bridge
+  services:
+    name: careeros-services
+    driver: bridge
+    internal: true

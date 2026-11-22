@@ -29,6 +29,8 @@ services:
       timeout: 3s
       retries: 20
     mem_limit: 512m
+    networks:
+      - data
 
   rabbitmq:
     image: rabbitmq:4.4.1-management
@@ -48,6 +50,8 @@ services:
       timeout: 5s
       retries: 20
     mem_limit: 512m
+    networks:
+      - data
 
   object-storage:
     image: chrislusf/seaweedfs:4.53
@@ -66,8 +70,16 @@ services:
       timeout: 3s
       retries: 30
     mem_limit: 512m
+    networks:
+      - data
 
 volumes:
   postgres_data:
   rabbitmq_data:
   object_storage_data:
+
+networks:
+  data:
+    name: careeros-data
+    driver: bridge
+    internal: true
