@@ -15,11 +15,16 @@ This public repository must never contain secrets, real resumes, real applicatio
 
 ## Documentation
 
-See [docs/overview.md](docs/overview.md) and the central [CareerOS workspace](https://github.com/FievezRomain/careeros-workspace).
+See:
+
+- [Service overview](docs/overview.md)
+- [Local platform dependencies](docs/dependencies.md)
+- [Local Keycloak foundation](docs/keycloak.md)
+- [Central CareerOS workspace](https://github.com/FievezRomain/careeros-workspace)
 
 ## Status
 
-Architecture and security baseline. Functional implementation will be added incrementally with tests and versioned contracts.
+Local Keycloak and core dependency stacks are available with tests and placeholder-only configuration. Routing, observability and deployment automation remain incremental.
 
 ## License
 

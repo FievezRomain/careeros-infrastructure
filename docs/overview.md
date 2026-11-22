@@ -18,6 +18,12 @@ Deployable configuration templates, environment contracts and operational runboo
 
 The first useful layer is Docker Compose, service health checks, local networking, Traefik/reverse-proxy configuration and observability defaults. Idempotent bootstrap, migration, backup and restore scripts may be added as operational needs appear. Terraform, Ansible, Helm or Kubernetes belong here only when the deployment model justifies them.
 
+Current local foundations:
+
+- `infra/dependencies/compose.local.yml` provides isolated service databases, RabbitMQ and S3-compatible object storage.
+- `infra/keycloak/compose.local.yml` provides the dedicated CareerOS realm and identity datastore.
+- Every published development port is loopback-bound and every public environment file contains placeholders only.
+
 ## Contract rules
 
 - APIs and events are versioned.
