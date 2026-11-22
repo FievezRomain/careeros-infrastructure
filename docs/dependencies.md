@@ -4,13 +4,16 @@ The V1 local dependency stack provides PostgreSQL 16, RabbitMQ 4 and an S3-compa
 
 ## Configure
 
-Prerequisites: Docker Engine with the Compose plugin.
+Prerequisites: Docker Engine with the Compose plugin and Python 3.14.
 
 ```bash
-cp infra/dependencies/.env.example infra/dependencies/.env
+python scripts/bootstrap_local.py
+python scripts/validate_local_env.py
 ```
 
-Fill every value in the ignored `.env` file with local-only credentials. Empty values fail Compose interpolation before any container starts. Never reuse these credentials outside local development.
+Bootstrap creates ignored, private environment files for dependencies and Keycloak with independent local-only values. Re-running it never overwrites an existing file. Validation checks required variables, secret independence, private POSIX permissions, Docker Compose availability and all local Compose configurations without printing values.
+
+To supply values manually, copy `.env.example` to `.env`, fill every value and run the validator. Empty, short or reused secrets fail before any container starts. Never reuse these credentials outside local development.
 
 ## Start and verify
 

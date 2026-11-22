@@ -25,7 +25,7 @@ See:
 
 ## Status
 
-Local Keycloak and core dependency stacks are available with tests and placeholder-only configuration. Routing, observability and deployment automation remain incremental.
+Local Keycloak, core dependencies and routing are available with tests and placeholder-only configuration. Idempotent bootstrap and environment validation cover the complete local stack; observability and deployment automation remain incremental.
 
 ## License
 
