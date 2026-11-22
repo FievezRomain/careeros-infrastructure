@@ -35,7 +35,7 @@ test('edge, service and data networks have stable names and service isolation', 
 test('gateway liveness is distinct from routed readiness', () => {
   assert.match(routingCompose, /entrypoints\.health\.address=:8082/);
   assert.match(routingCompose, /ping\.entrypoint=health/);
-  assert.match(routingCompose, /traefik, healthcheck, --ping/);
+  assert.match(routingCompose, /traefik, healthcheck, --ping, --ping\.entrypoint=health, --entrypoints\.health\.address=:8082/);
   assert.match(documentation, /`GET \/health\/live`/);
   assert.match(documentation, /`GET \/health\/ready`/);
   assert.match(documentation, /must not contain secrets, personal data, stack traces or dependency credentials/i);

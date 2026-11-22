@@ -23,7 +23,7 @@ services:
       - edge
       - services
     healthcheck:
-      test: [CMD, traefik, healthcheck, --ping]
+      test: [CMD, traefik, healthcheck, --ping, --ping.entrypoint=health, --entrypoints.health.address=:8082]
       interval: 5s
       timeout: 3s
       retries: 20
