@@ -21,6 +21,7 @@ The first useful layer is Docker Compose, service health checks, local networkin
 Current local foundations:
 
 - `infra/dependencies/compose.local.yml` provides isolated service databases, RabbitMQ and S3-compatible object storage.
+- `infra/routing/compose.local.yml` provides the loopback gateway plus explicit edge and service networks.
 - `infra/keycloak/compose.local.yml` provides the dedicated CareerOS realm and identity datastore.
 - Every published development port is loopback-bound and every public environment file contains placeholders only.
 

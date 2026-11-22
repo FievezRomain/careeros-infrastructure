@@ -52,6 +52,7 @@ jobs:
       - run: node --test tests/*.test.mjs
       - run: docker compose -f infra/keycloak/compose.local.yml config --quiet
       - run: docker compose -f infra/dependencies/compose.local.yml config --quiet
+      - run: docker compose -f infra/routing/compose.local.yml config --quiet
       - name: Start local dependencies
         run: docker compose -f infra/dependencies/compose.local.yml up -d --wait
       - name: Verify database ownership isolation
@@ -69,6 +70,17 @@ jobs:
         run: |
           test "$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:15672/api/overview)" = '401'
           test "$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:8333/)" = '403'
+      - name: Start local routing
+        run: docker compose -f infra/routing/compose.local.yml up -d --wait
+      - name: Verify routing and network boundaries
+        run: |
+          curl --fail --resolve health.careeros.localhost:8080:127.0.0.1 \
+            http://health.careeros.localhost:8080/ready
+          test "$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/ready)" = '404'
+          docker network inspect careeros-edge careeros-services careeros-data >/dev/null
+      - name: Stop local routing
+        if: always()
+        run: docker compose -f infra/routing/compose.local.yml down
       - name: Stop local dependencies
         if: always()
         run: docker compose -f infra/dependencies/compose.local.yml down --volumes

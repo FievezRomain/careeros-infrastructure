@@ -19,6 +19,7 @@ See:
 
 - [Service overview](docs/overview.md)
 - [Local platform dependencies](docs/dependencies.md)
+- [Local routing and health checks](docs/routing.md)
 - [Local Keycloak foundation](docs/keycloak.md)
 - [Central CareerOS workspace](https://github.com/FievezRomain/careeros-workspace)
 
