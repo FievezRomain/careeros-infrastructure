@@ -52,3 +52,23 @@ jobs:
       - run: node --test tests/*.test.mjs
       - run: docker compose -f infra/keycloak/compose.local.yml config --quiet
       - run: docker compose -f infra/dependencies/compose.local.yml config --quiet
+      - name: Start local dependencies
+        run: docker compose -f infra/dependencies/compose.local.yml up -d --wait
+      - name: Verify database ownership isolation
+        run: |
+          docker compose -f infra/dependencies/compose.local.yml exec -T \
+            -e PGPASSWORD="$PROFILE_DB_PASSWORD" postgres \
+            psql -h 127.0.0.1 -U profile_service -d careeros_profile -c 'SELECT 1'
+          if docker compose -f infra/dependencies/compose.local.yml exec -T \
+            -e PGPASSWORD="$PROFILE_DB_PASSWORD" postgres \
+            psql -h 127.0.0.1 -U profile_service -d careeros_job -c 'SELECT 1'; then
+            echo 'profile_service unexpectedly accessed careeros_job' >&2
+            exit 1
+          fi
+      - name: Verify anonymous dependency access is denied
+        run: |
+          test "$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:15672/api/overview)" = '401'
+          test "$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:8333/)" = '403'
+      - name: Stop local dependencies
+        if: always()
+        run: docker compose -f infra/dependencies/compose.local.yml down --volumes
